@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+/* ─── Design tokens ─────────────────────────────────────────────────────────
+   Following the impeccable + design-for-ai principles:
+   - OKLCH throughout (perceptually uniform; the modern correct choice)
+   - Tinted neutrals — warm cream paper, warm dark ink. Not pure white / not pure black.
+   - One intentional accent — burnt sienna. Not a default blue, teal, or purple gradient.
+   - Modular type scale anchored at 16px
+   - Generous spacing
+   - No bouncy easing
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, "Iowan Old Style", Georgia, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "JetBrains Mono", monospace;
+
+  /* Surfaces — warm cream */
+  --color-paper: oklch(97.6% 0.007 85);
+  --color-paper-2: oklch(95.8% 0.009 85);
+  --color-paper-3: oklch(93.5% 0.011 85);
+
+  /* Ink — warm near-black, never pure */
+  --color-ink: oklch(22% 0.012 60);
+  --color-ink-2: oklch(38% 0.012 60);
+  --color-ink-3: oklch(54% 0.011 60);
+  --color-ink-4: oklch(70% 0.010 60);
+
+  /* Rules */
+  --color-rule: oklch(88% 0.012 75);
+  --color-rule-strong: oklch(78% 0.014 70);
+
+  /* Single intentional accent — burnt sienna */
+  --color-accent: oklch(48% 0.135 32);
+  --color-accent-2: oklch(42% 0.130 32);
+  --color-accent-soft: oklch(93% 0.030 35);
+  --color-accent-ink: oklch(28% 0.090 32);
+
+  /* Semantic — quiet, not saturated */
+  --color-positive: oklch(50% 0.090 145);
+  --color-positive-soft: oklch(93% 0.028 145);
+  --color-warn: oklch(60% 0.130 65);
+  --color-warn-soft: oklch(94% 0.038 75);
+  --color-danger: oklch(52% 0.160 28);
+}
+
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-paper: oklch(15% 0.012 60);
+    --color-paper-2: oklch(18% 0.013 60);
+    --color-paper-3: oklch(22% 0.013 60);
+    --color-ink: oklch(95% 0.008 85);
+    --color-ink-2: oklch(78% 0.011 80);
+    --color-ink-3: oklch(62% 0.012 75);
+    --color-ink-4: oklch(48% 0.011 70);
+    --color-rule: oklch(28% 0.014 65);
+    --color-rule-strong: oklch(38% 0.014 65);
+    --color-accent: oklch(72% 0.140 35);
+    --color-accent-2: oklch(78% 0.135 38);
+    --color-accent-soft: oklch(28% 0.060 32);
+    --color-accent-ink: oklch(88% 0.090 38);
+    --color-positive-soft: oklch(28% 0.045 145);
+    --color-warn-soft: oklch(30% 0.060 70);
+  }
+}
+
+/* ─── Base ──────────────────────────────────────────────────────────────── */
+
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "ss01", "cv11", "cv05";
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+}
+
+/* Tabular figures */
+.nums-tabular { font-variant-numeric: tabular-nums lining-nums; }
+
+/* Display type */
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 30, "WONK" 0, "opsz" 144;
+  letter-spacing: -0.022em;
+  line-height: 1.04;
+}
+.font-display-italic {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144;
+}
+
+/* Selection — accent-tinted */
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-ink);
+}
+
+/* Single, sharp focus ring — no glow */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Layout helpers */
+.container-prose {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+@media (min-width: 768px) {
+  .container-prose { padding-inline: 2.5rem; }
+}
+
+/* Hairline rules */
+.hairline { border-color: var(--color-rule); border-width: 1px; }
+.hairline-t { border-top: 1px solid var(--color-rule); }
+.hairline-b { border-bottom: 1px solid var(--color-rule); }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Standard easings — calm, never bouncy */
+.ease-standard { transition-timing-function: cubic-bezier(0.2, 0, 0, 1); }
+.ease-emphasis { transition-timing-function: cubic-bezier(0.3, 0, 0, 1); }
+
+/* Small caps eyebrows */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+}
+
+/* Long-form lists with em-dash markers */
+.dash-list > li {
+  position: relative;
+  padding-left: 1.25rem;
+}
+.dash-list > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 0.6rem;
+  height: 1px;
+  background: var(--color-ink-3);
+}
+
+/* Kbd-style key hint */
+kbd, .kbd {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: var(--color-paper-3);
+  border: 1px solid var(--color-rule);
+  border-bottom-width: 2px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--color-ink-2);
+}
+
+/* Subtle tinted block — used for callouts */
+.tint-accent {
+  background: var(--color-accent-soft);
+  border-left: 2px solid var(--color-accent);
+}
+.tint-paper {
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-rule);
+}
