@@ -9,6 +9,16 @@ export type Company = {
   whereSystemThinking: string;
   redFlag: string;
   sampleQuestions: string[];
+  /** Actual questions the company uses as filters; quoted from candidate / insider talks. */
+  signatureQuestions?: string[];
+  /** Things to bring up unprompted that signal cultural fluency. */
+  whatToMention?: string[];
+  /** Anti-patterns that read as not-getting-it inside this company's loop. */
+  whatToAvoid?: string[];
+  /** Traits hiring managers explicitly filter for. */
+  hiresFor?: string[];
+  /** Provenance — adapted from public talks, candidate debriefs, etc. */
+  sourceNotes?: string;
 };
 
 export const COMPANIES: Company[] = [
@@ -40,24 +50,62 @@ export const COMPANIES: Company[] = [
     slug: "anthropic",
     name: "Anthropic",
     tc: "$468K median TC",
-    oneLiner: "Safety-first. Dedicated safety round. If you don't volunteer safety thinking — auto −2 points.",
+    oneLiner:
+      "Safety-first lab. The PM role is 'AGI-pill' — first-principles thinking from the technology, not pattern-matching from past PM titles.",
     structure:
-      "8–9 rounds including take-home. Product sense, analytics, behavioral, culture/values, dedicated AI safety & ethics round.",
+      "8–9 rounds including take-home. Product sense, analytics, behavioral, culture/values, dedicated AI safety & ethics round. Hires for taste in users, taste in technology, comfort with ambiguity. Title-agnostic culture — everyone is 'a member of technical staff'.",
     whatTheyTest: [
-      "Safety as the primary constraint, not a checkbox.",
-      "Constitutional AI, RLHF, red teaming, alignment, adversarial robustness — used naturally.",
-      "How you decide under uncertainty and weigh long-term consequences.",
-      "Connection to Anthropic's mission in product framing.",
+      "Safety as design constraint, not a checkbox. If you don't volunteer safety thinking → auto −2.",
+      "First-principles answers. They distrust the 'I am a PM because I have done these PM things' pattern.",
+      "Calibrated risk-taking. 'Not shipping is also a decision.' Show how you decide what to bet on.",
+      "Ambition framed in % of GDP, not 5% metric movement.",
+      "Evals are the PRD. Show you can write the eval that measures whether your bet worked.",
+      "Hands-on with the technology. They expect you to have dogfooded Claude on real work — not just demoed it.",
+      "Model-layer vs application-layer literacy in every answer.",
     ],
     whereSystemThinking:
-      "System design for technical roles focuses on practical inference-API and GPU-server problems. Every product sense answer should frame how a feature builds user trust.",
-    redFlag: "Safety mentioned only when prompted. Using Claude on the take-home (explicit constraint).",
+      "Inside product sense, behavioral, and the safety round. Every product answer should frame how a feature builds user trust without losing the long-term capability bet. Technical roles also get practical inference-API and GPU-server problems.",
+    redFlag:
+      "Safety mentioned only when prompted. Pitching features that exist at OpenAI (imagegen / videogen are explicit non-bets). 'User-led' framing where you fulfill every customer ask instead of being 'user-centric'. Using Claude on the take-home (explicit constraint).",
     sampleQuestions: [
       "Design the evaluation system for Claude's tool use capabilities",
       "Build an agent system for enterprise workflow automation",
       "How would you architect a jailbreak detection system?",
       "Design a churn prediction and intervention system for Claude API users",
     ],
+    signatureQuestions: [
+      "What is something you believe about this technology that is not a widely shared opinion? — used as a primary filter. Answers that pattern-match what every podcast guest says fail.",
+      "What would you build if Claude 8 worked perfectly? — surfaces 10x / 100x thinking vs next-quarter feature requests.",
+      "Walk us through a calculated risk you took where you knew the downside up front. — frames risk as portfolio, not as 'we'll figure it out'.",
+      "What's the eval that would tell you the bet was wrong? — if you can't name it, you don't really have a strategy.",
+    ],
+    whatToMention: [
+      "Frame ambition in % of GDP terms, not point-improvements.",
+      "Familiarity with 'AI 2027' and 'Situational Awareness' essays — handed as required reading to offered candidates.",
+      "'Evals are the PRD.' In AI products the measurement is the spec.",
+      "'High conviction on the theme, low conviction on the exact product experience.'",
+      "'Scaling the exponential' — capabilities that are general and novel, not 1–2% accuracy gains.",
+      "Recursive self-improvement as the underlying lab bet — even if you push back, signal you've thought about it.",
+      "Concrete dogfooding stories: reading individual user-feedback transcripts before a launch, not just dashboard reviews.",
+      "User-centric vs user-led distinction (build what users don't yet know they want from this capability).",
+    ],
+    whatToAvoid: [
+      "Pitching imagegen / videogen as obvious roadmap. They're explicit non-bets; 'why are some boxes crossed out?' is the wrong instinct.",
+      "Generic 'frontier AI' language. Specific bets beat vibes.",
+      "Pattern-matching from a Big-Tech PM ladder. There is no manager-of-managers-of-PMs layer.",
+      "Optimizing for an engagement metric in your product-sense answer — that's the alignment org's pushback to make, not yours to amplify.",
+      "Using Claude on the take-home. Explicit constraint.",
+      "Sales-style 'we'll add that' answers to every customer request.",
+    ],
+    hiresFor: [
+      "Likes puzzles — comfortable with the technology as an open question.",
+      "First-principles, not pattern-matching. Strongest hires often have limited traditional PM background but strong user + technical taste.",
+      "Surprises the interviewer on the 'unshared opinion' question.",
+      "Calibrated-risk mindset; comfortable naming the downside.",
+      "Title-agnostic; 'member of technical staff' fluency.",
+    ],
+    sourceNotes:
+      "Anthropic-specific signals adapted from a 2026 GSB guest talk by Anthropic's Head of Product. Structure / TC / sample questions remain from earlier candidate debriefs.",
   },
   {
     slug: "google-deepmind",

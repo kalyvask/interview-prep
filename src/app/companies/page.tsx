@@ -78,6 +78,55 @@ export default function CompaniesPage() {
                   ))}
                 </ul>
               </div>
+
+              {c.signatureQuestions && c.signatureQuestions.length > 0 && (
+                <div>
+                  <p className="eyebrow mb-2">Signature questions</p>
+                  <ul className="space-y-2.5 text-[color:var(--color-ink-2)]">
+                    {c.signatureQuestions.map((q, j) => (
+                      <li key={j} className="text-sm leading-relaxed border-l-2 border-[color:var(--color-accent)] pl-3">
+                        {q}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {(c.whatToMention || c.whatToAvoid) && (
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {c.whatToMention && c.whatToMention.length > 0 && (
+                    <div className="tint-paper rounded-md p-4">
+                      <p className="eyebrow mb-2">Mention unprompted</p>
+                      <ul className="dash-list space-y-1.5 text-sm text-[color:var(--color-ink-2)]">
+                        {c.whatToMention.map((t, j) => <li key={j}>{t}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                  {c.whatToAvoid && c.whatToAvoid.length > 0 && (
+                    <div className="tint-accent rounded-md p-4 pl-5">
+                      <p className="eyebrow text-[color:var(--color-accent-ink)] mb-2">Avoid</p>
+                      <ul className="dash-list space-y-1.5 text-sm text-[color:var(--color-ink-2)]">
+                        {c.whatToAvoid.map((t, j) => <li key={j}>{t}</li>)}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {c.hiresFor && c.hiresFor.length > 0 && (
+                <div>
+                  <p className="eyebrow mb-2">Hires for</p>
+                  <ul className="dash-list space-y-1.5 text-[color:var(--color-ink-2)]">
+                    {c.hiresFor.map((t, j) => <li key={j} className="text-sm">{t}</li>)}
+                  </ul>
+                </div>
+              )}
+
+              {c.sourceNotes && (
+                <p className="text-xs text-[color:var(--color-ink-4)] italic pt-2 hairline-t">
+                  {c.sourceNotes}
+                </p>
+              )}
             </div>
           </article>
         ))}

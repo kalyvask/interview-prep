@@ -32,6 +32,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# personal-config layer — your stories, profile, calibration anchors
+src/content/personal.ts
 
 # vercel
 .vercel
