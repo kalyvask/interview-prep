@@ -61,6 +61,9 @@ export const PERSONAL_PROFILE: UserProfile = {
   ],
   yearsExperience: 8,
   seniorityLevel: "Senior PM",
+  // Paste your CV as plain text here to auto-fill the /interview setup form.
+  // Leave undefined to require manual upload each session.
+  // cvText: `…`,
 };
 
 export const ANCHOR_STORIES: AnchorStory[] = [

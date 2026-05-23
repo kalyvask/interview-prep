@@ -27,6 +27,8 @@ interface SetupFormProps {
   onStart: (input: StartInput) => void;
   isLoading?: boolean;
   error?: string | null;
+  /** True when the initialCvText came from src/content/personal.ts. */
+  personalProfileLoaded?: boolean;
 }
 
 const MAX_PICKS = 10;
@@ -37,10 +39,13 @@ export default function SetupForm({
   onStart,
   isLoading,
   error,
+  personalProfileLoaded = false,
 }: SetupFormProps) {
   const [mode, setMode] = useState<SourceMode>("generate");
   const [cvText, setCvText] = useState(initialCvText);
-  const [cvFileName, setCvFileName] = useState<string | undefined>();
+  const [cvFileName, setCvFileName] = useState<string | undefined>(
+    personalProfileLoaded && initialCvText ? "Loaded from personal profile" : undefined,
+  );
   const [jdText, setJdText] = useState(initialJdText);
   const [parseError, setParseError] = useState<string | null>(null);
   const [isParsing, setIsParsing] = useState(false);

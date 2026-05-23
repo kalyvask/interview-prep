@@ -20,6 +20,12 @@ export interface UserProfile {
   industries: string[];
   yearsExperience: number | null;
   seniorityLevel: string;
+  /**
+   * Optional plain-text CV. When set, the /interview setup form
+   * auto-fills the CV field with this value (the candidate can still
+   * edit). Leave undefined or empty to require manual entry.
+   */
+  cvText?: string;
 }
 
 /**

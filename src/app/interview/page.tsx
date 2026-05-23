@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import Link from "next/link";
 import { STAGE_LABELS } from "@/content/questions";
+import { PERSONAL_PROFILE } from "@/lib/user-profile";
 import SetupForm, { type StartInput } from "@/components/session/setup-form";
 import CoachAudio from "@/components/session/coach-audio";
 import Recorder from "@/components/session/recorder";
@@ -286,11 +287,12 @@ export default function InterviewPage() {
 
       {configReady && showSetupForm && (
         <SetupForm
-          initialCvText={state.cvText}
+          initialCvText={state.cvText || PERSONAL_PROFILE.cvText || ""}
           initialJdText={state.jdText}
           onStart={startInterview}
           isLoading={state.status === "loading_questions"}
           error={state.error}
+          personalProfileLoaded={Boolean(PERSONAL_PROFILE.cvText)}
         />
       )}
 
