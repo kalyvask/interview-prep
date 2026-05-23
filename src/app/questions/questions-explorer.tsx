@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type {
-  Question,
+  ExtraQuestion,
   QuestionCategory,
   CategoryNote,
   Stage,
@@ -11,8 +11,12 @@ import type {
 
 type FilterMode = "stage" | "category";
 
+// Accept the wider ExtraQuestion shape so the bank can include
+// personal-config extras with categories outside the public union.
+type BankQuestion = ExtraQuestion;
+
 type Props = {
-  questions: Question[];
+  questions: BankQuestion[];
   categories: QuestionCategory[];
   notes: CategoryNote[];
   stages: Stage[];
@@ -31,7 +35,7 @@ export function QuestionsExplorer({
   const [mode, setMode] = useState<FilterMode>("stage");
   const [activeCategory, setActiveCategory] = useState<QuestionCategory | "All">("All");
   const [activeStage, setActiveStage] = useState<Stage | "All">("All");
-  const [drill, setDrill] = useState<Question | null>(null);
+  const [drill, setDrill] = useState<BankQuestion | null>(null);
 
   // Reset the other axis when switching mode
   useEffect(() => {
@@ -208,7 +212,7 @@ function DrillModal({
   stageLabel,
   onClose,
 }: {
-  question: Question;
+  question: BankQuestion;
   stageLabel: string;
   onClose: () => void;
 }) {

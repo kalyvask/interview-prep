@@ -18,6 +18,7 @@ import type {
   AnchorStory,
   StoryKeyConfig,
 } from "@/lib/user-profile";
+import type { ExtraQuestion } from "./question-types";
 
 export const PERSONAL_PROFILE: UserProfile = {
   name: null, // set to your name, or leave null for anonymous
@@ -85,3 +86,17 @@ export const ANCHOR_STORIES: AnchorStory[] = [
  *   },
  */
 export const STORY_KEYS: Record<string, StoryKeyConfig> = {};
+
+/**
+ * Extra questions to merge into the bank — your own interviewer-loop
+ * presets, prep doc questions, anything you want drillable from the
+ * /interview picker. Numbers should start at 200+ to avoid colliding
+ * with the public bank. Category is a free string; you can introduce
+ * categories like "OpenAI Applied AI loop" without editing the public
+ * type. Stage must be one of the seven rounds in src/lib/rounds.ts.
+ *
+ * Example:
+ *   { number: 200, text: "[Interviewer / Round] question text…",
+ *     category: "Company Loop Name", stage: "technical_dasme" }
+ */
+export const EXTRA_QUESTIONS: ExtraQuestion[] = [];

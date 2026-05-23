@@ -17,7 +17,9 @@
 import { buildProfileContext } from "./user-profile";
 import { getRound } from "./rounds";
 import { CALIBRATIONS } from "@/content/calibrations";
-import { QUESTIONS } from "@/content/questions";
+// Use PUBLIC_QUESTIONS (not the merged bank) so personal interviewer-loop
+// extras never enter model prompts as shape examples.
+import { PUBLIC_QUESTIONS as QUESTIONS } from "@/content/questions";
 import type { Round } from "@/types";
 
 /* ─── Calibration anchors (real coach-rated paired answers) ──────── */

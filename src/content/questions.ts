@@ -1,36 +1,14 @@
 import type { Round } from "@/types";
+import { EXTRA_QUESTIONS } from "./personal";
+import type {
+  QuestionCategory,
+  Stage,
+  Question,
+  ExtraQuestion,
+} from "./question-types";
 
-/**
- * Question categories — system-design sub-domains within the technical
- * round, plus product-sense cases. Used as a secondary tag.
- */
-export type QuestionCategory =
-  | "Customer-Facing AI Agents"
-  | "Content + Recommendations"
-  | "Search + Retrieval"
-  | "Evaluation + Safety"
-  | "Autonomous Agents + Workflows"
-  | "Prediction + Analytics"
-  | "Product Sense Cases"
-  | "Recruiter screen"
-  | "Hiring manager"
-  | "Execution + metrics"
-  | "Stakeholder / GTM"
-  | "Behavioral / values";
-
-/**
- * Question stage — maps directly to the 7-round interview-loop taxonomy
- * in src/lib/rounds.ts. Used as the primary filter and to drive
- * round-specific grading rubrics in the mock interview.
- */
-export type Stage = Round;
-
-export type Question = {
-  number: number;
-  text: string;
-  category: QuestionCategory;
-  stage: Stage;
-};
+// Re-export shared types so existing consumers keep working unchanged.
+export type { QuestionCategory, Stage, Question, ExtraQuestion };
 
 export type CategoryNote = {
   category: QuestionCategory;
@@ -179,7 +157,12 @@ export const CATEGORY_NOTES: CategoryNote[] = [
   },
 ];
 
-export const QUESTIONS: Question[] = [
+/**
+ * Public bank — 114 questions visible in any fork. Used in /questions,
+ * the picker form, AND in the prompt-time shape examples in
+ * session-prompts.ts (so personal extras stay out of model prompts).
+ */
+export const PUBLIC_QUESTIONS: Question[] = [
   // Customer-Facing AI Agents (1–12) — Technical / DASME
   { number: 1,  text: "Design a churn reduction agent for a telecom company.",                              category: "Customer-Facing AI Agents", stage: "technical_dasme" },
   { number: 2,  text: "Build a customer support agent that handles refund requests end-to-end.",            category: "Customer-Facing AI Agents", stage: "technical_dasme" },
@@ -317,6 +300,17 @@ export const QUESTIONS: Question[] = [
   { number: 112, text: "Tell me about a time you said no to a powerful stakeholder.",                                                                 category: "Behavioral / values", stage: "behavioral_values" },
   { number: 113, text: "Tell me about a time the safety or mission framing of this company would have changed a decision you made.",                  category: "Behavioral / values", stage: "behavioral_values" },
   { number: 114, text: "Tell me about a time you held a metric you were measured on as the wrong one — and what you did about it.",                  category: "Behavioral / values", stage: "behavioral_values" },
+];
+
+/**
+ * Merged bank — public 114 + any extras the user defined in
+ * src/content/personal.ts EXTRA_QUESTIONS. Categories are loosened
+ * because extras can introduce new ones. This is the array consumed
+ * by the picker form and the /questions explorer.
+ */
+export const QUESTIONS: ExtraQuestion[] = [
+  ...PUBLIC_QUESTIONS,
+  ...EXTRA_QUESTIONS,
 ];
 
 export const CATEGORY_ORDER: QuestionCategory[] = [
