@@ -18,12 +18,21 @@ export type SessionStatus =
   | "complete" // show summary
   | "error";
 
+import type { Round } from "./index";
+
 export interface SessionQuestion {
   id: string;
   text: string;
   category: "behavioral" | "role-specific" | "technical";
   rationale: string;
   targetSeconds: number;
+  /**
+   * Interview-loop stage. When the candidate picked the question from the
+   * bank, this maps to the 7-round taxonomy in src/lib/rounds.ts and
+   * activates the round-specific grading rubric. Optional because
+   * AI-generated questions don't always map cleanly to one round.
+   */
+  stage?: Round;
 }
 
 export interface SessionAnswer {

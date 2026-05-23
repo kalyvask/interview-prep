@@ -5,6 +5,7 @@ import {
   gradeSystem,
   gradeUser,
 } from "@/lib/session-prompts";
+import type { Round } from "@/types";
 
 interface Grade {
   score: number;
@@ -18,34 +19,29 @@ interface Grade {
  *
  * Body:
  *   {
- *     cvText: string,
- *     jdText: string,
- *     question: { text: string },
+ *     cvText?: string,         // optional in pick mode; falls back to a generic prompt
+ *     jdText?: string,         // optional in pick mode
+ *     question: { text: string, stage?: Round },
  *     answer: string,
  *   }
  *
  * Returns: Grade
  *
  * The CV + JD context is the cacheable system block. The question and
- * answer are sent as the user message and are NOT cached. Per-question
- * cost lands near $0.01-0.03 after the cache warms up.
+ * answer are sent as the user message and are NOT cached. When the
+ * question has a stage (from the bank picker), the round-specific
+ * rubric from src/lib/rounds.ts is layered into the grading prompt.
  */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { cvText, jdText, question, answer } = body as {
+    const { cvText = "", jdText = "", question, answer } = body as {
       cvText?: string;
       jdText?: string;
-      question?: { text: string };
+      question?: { text: string; stage?: Round };
       answer?: string;
     };
 
-    if (!cvText || !jdText) {
-      return NextResponse.json(
-        { error: "cvText and jdText are required (the session context)." },
-        { status: 400 },
-      );
-    }
     if (!question?.text || !answer) {
       return NextResponse.json(
         { error: "Missing question or answer." },
@@ -55,7 +51,7 @@ export async function POST(request: Request) {
 
     const text = await chatCompletion({
       messages: [
-        { role: "system", content: gradeSystem() },
+        { role: "system", content: gradeSystem(question.stage) },
         { role: "system", content: sessionContextBlock({ cvText, jdText }) },
         { role: "user", content: gradeUser(question.text, answer) },
       ],

@@ -15,8 +15,10 @@
  */
 
 import { buildProfileContext } from "./user-profile";
+import { getRound } from "./rounds";
 import { CALIBRATIONS } from "@/content/calibrations";
 import { QUESTIONS } from "@/content/questions";
+import type { Round } from "@/types";
 
 /* ─── Calibration anchors (real coach-rated paired answers) ──────── */
 
@@ -74,19 +76,29 @@ export interface SessionContextInput {
  * The big cacheable context block. Combine the candidate profile, the CV
  * text, and the JD text into one system message marked cacheable. Put any
  * tiny non-cacheable instructions in a SEPARATE system message first.
+ *
+ * CV/JD are optional — in pick mode the candidate may drill questions
+ * without uploading either. We render an explicit placeholder so the
+ * grader knows to fall back to generic AI PM expectations.
  */
 export function sessionContextBlock(input: SessionContextInput): string {
   const profile = buildProfileContext();
+  const cv = input.cvText.trim()
+    ? input.cvText.trim()
+    : "(not provided — grade against generic AI PM expectations; do not invent CV details)";
+  const jd = input.jdText.trim()
+    ? input.jdText.trim()
+    : "(not provided — grade against generic AI PM role expectations; do not invent JD requirements)";
   return `${profile}
 
 CV TEXT (from the candidate's resume):
 ---
-${input.cvText.trim()}
+${cv}
 ---
 
 JOB DESCRIPTION (the role the candidate is preparing for):
 ---
-${input.jdText.trim()}
+${jd}
 ---`;
 }
 
@@ -129,19 +141,35 @@ export function startInterviewUser(): string {
 
 /* ─── grade ──────────────────────────────────────────────────────── */
 
-export function gradeSystem(): string {
+function buildRoundRubric(stage: Round): string {
+  const def = getRound(stage);
+  const dims = def.rubric
+    .map((r, i) => `   ${i + 1}. ${r.dimension} (0-${r.max}): ${r.description}`)
+    .join("\n");
+  return `ROUND CONTEXT — this question is from the "${def.label}" round (${def.short}).
+
+${def.description}
+
+ROUND-SPECIFIC RUBRIC (use this in addition to the calibration anchors below):
+${dims}
+
+Expected answer length: about ${def.targetWindowSec} seconds spoken.`;
+}
+
+export function gradeSystem(stage?: Round): string {
+  const roundBlock = stage ? `${buildRoundRubric(stage)}\n\n` : "";
   return `You are a senior interview coach grading a candidate's answer in a Product Management mock interview.
 
-CALIBRATION ANCHORS — real coach-rated answers. Use these to anchor your scoring; do not invent your own scale.
+${roundBlock}CALIBRATION ANCHORS — real coach-rated answers. Use these to anchor your scoring; do not invent your own scale.
 
 ${buildCalibrationAnchors()}
 
 Notice the gap between the weak and strong answers: specificity, named architectures / metrics / dollar math, weakness-flipping, third-option thinking, time discipline. That's the gap between a 4 and a 9. Most real answers fall somewhere between — be honest about where this one lands.
 
 GRADING RULES:
-- Score 1-10 calibrated against the anchors above. 5-6 is the median answer; 7 is solid but missing one element a 9 would have; 8 is very strong; 9-10 is rare and requires the kind of specificity, third-option thinking, and weakness-flipping visible in the STRONG anchors.
+- Score 1-10 calibrated against the anchors above${stage ? " and the round-specific rubric" : ""}. 5-6 is the median answer; 7 is solid but missing one element a 9 would have; 8 is very strong; 9-10 is rare and requires the kind of specificity, third-option thinking, and weakness-flipping visible in the STRONG anchors.
 - "Stronger rephrase" rewrites the candidate's OWN answer in 4-6 sentences. Keep their story and content; tighten structure, add what's missing, cut what isn't earning its place. Do NOT swap in someone else's story.
-- "Strengths" and "improvements" are 2-4 items each. Specific, not generic ("the metric you cited is concrete" beats "good use of metrics"). When relevant, reference how the answer compares to the anchors (e.g., "named the architecture like the STRONG anchor, but missed the dollar math").
+- "Strengths" and "improvements" are 2-4 items each. Specific, not generic ("the metric you cited is concrete" beats "good use of metrics"). When relevant, reference how the answer compares to the anchors (e.g., "named the architecture like the STRONG anchor, but missed the dollar math")${stage ? " or the round rubric (e.g., \"strong on action specificity, weak on STAR completeness\")" : ""}.
 
 Return ONLY valid JSON:
 {

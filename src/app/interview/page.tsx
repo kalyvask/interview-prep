@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import Link from "next/link";
-import SetupForm from "@/components/session/setup-form";
+import { STAGE_LABELS } from "@/content/questions";
+import SetupForm, { type StartInput } from "@/components/session/setup-form";
 import CoachAudio from "@/components/session/coach-audio";
 import Recorder from "@/components/session/recorder";
 import GradeCard from "@/components/session/grade-card";
@@ -144,8 +145,23 @@ export default function InterviewPage() {
   const isLastQuestion = state.currentIndex === state.questions.length - 1;
 
   const startInterview = useCallback(
-    async (input: { cvText: string; jdText: string; cvFileName?: string }) => {
-      dispatch({ type: "SET_CONTEXT", payload: input });
+    async (input: StartInput) => {
+      dispatch({
+        type: "SET_CONTEXT",
+        payload: {
+          cvText: input.cvText,
+          jdText: input.jdText,
+          cvFileName: input.cvFileName,
+        },
+      });
+
+      // Pick mode: the candidate already chose questions from the bank.
+      // Skip /api/start-interview and go straight to the active state.
+      if (input.mode === "pick" && input.pickedQuestions?.length) {
+        dispatch({ type: "SET_QUESTIONS", payload: input.pickedQuestions });
+        return;
+      }
+
       try {
         const res = await fetch("/api/start-interview", {
           method: "POST",
@@ -182,7 +198,7 @@ export default function InterviewPage() {
           body: JSON.stringify({
             cvText: state.cvText,
             jdText: state.jdText,
-            question: { text: q.text },
+            question: { text: q.text, stage: q.stage },
             answer: answer.transcript,
           }),
         });
@@ -392,10 +408,17 @@ function QuestionPanel({
       <ProgressDots current={currentIndex} total={totalQuestions} />
 
       <article className="space-y-4">
-        <div className="flex items-baseline gap-3">
-          <span className="eyebrow">{question.category}</span>
-          <span className="text-xs text-[color:var(--color-ink-4)]">
-            Target answer length: {question.targetSeconds}s
+        <div className="flex items-baseline gap-3 flex-wrap">
+          <span className="eyebrow">
+            {question.stage ? STAGE_LABELS[question.stage] : question.category}
+          </span>
+          {question.stage && (
+            <span className="text-xs text-[color:var(--color-ink-4)]">
+              · {question.category}
+            </span>
+          )}
+          <span className="text-xs text-[color:var(--color-ink-4)] ml-auto">
+            Target: {question.targetSeconds}s
           </span>
         </div>
         <p className="font-display text-2xl md:text-3xl leading-snug text-[color:var(--color-ink)]">
