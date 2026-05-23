@@ -1,42 +1,66 @@
 # interview-prep
 
-Practice AI PM interviews end to end. Add your resume, paste the job
-description, and the tool generates five interview questions tailored to
-your background and that role. The coach speaks each question aloud
-through ElevenLabs; you answer out loud; Whisper transcribes you; Claude
-grades each answer 1-10 against real coach-rated calibration examples,
-names strengths and improvements, and rewrites your answer as a stronger
-version. After five questions you see an overall score, the top three
-things to fix before the real loop, and a short note on what you did
-well.
+Practice AI PM interviews end to end. At `/interview`, choose your
+source: either upload your CV and paste a JD to get five questions
+generated for you, or pick up to ten questions directly from the
+114-question bank — filtered by interview stage (recruiter screen,
+hiring manager, product sense, execution + metrics, technical / DASME,
+stakeholder / GTM, behavioral / values). Either path runs the same
+voice loop: the coach speaks each question aloud through ElevenLabs;
+you answer out loud; Whisper transcribes you; Claude grades each answer
+1-10 against real coach-rated calibration examples and the
+round-specific rubric, names strengths and improvements, and rewrites
+your answer as a stronger version. At the end you get an overall score,
+the top three things to fix before the real loop, and a short
+encouragement.
 
 Questions and grading by Claude (Opus 4.7). Voice by ElevenLabs (or the
 browser's built-in voice as a fallback). Transcription by Whisper (or
 typing as a fallback). Resume parsed in the browser; never leaves your
 machine.
 
-The tool is also a browseable reference: seven AI PM interview rounds,
-the DASME framework, sixty-four system-design questions with a
-45-minute drill timer, paired 4/10-vs-9/10 calibration answers, and
-company playbooks for OpenAI, Anthropic, Google DeepMind, Meta AI,
-Amazon AGI, Netflix, Apple, and Nvidia.
+The tool is also a browseable reference at `/questions`,
+`/frameworks`, `/companies`, and `/calibrations`: 114 questions across
+all seven AI PM interview stages, the DASME framework, paired
+4/10-vs-9/10 calibration answers, and per-company playbooks for OpenAI,
+Anthropic, Google DeepMind, Meta AI, Amazon AGI, Netflix, Apple, and
+Nvidia.
 
 ## How to use it
 
-1. **Add your resume.** Drag a PDF into `/interview` or click "Paste as
+Open `/interview` and pick a question source:
+
+**Path A — generated for you (default):**
+
+1. **Add your resume.** Drag a PDF into the dropzone or click "Paste as
    text" and paste it. Parsing happens in the browser.
 2. **Paste the JD** for the role you're prepping for.
-3. **Run the session.** Click *Start the interview*. Five personalized
-   questions get generated. For each one: the coach speaks the question,
-   you click record, you answer out loud, you click stop, and you see
-   your grade (score, strengths, improvements, stronger rephrase). Click
-   *Next question* to continue.
-4. **Read the summary** after question five: overall score, the top
-   three things to change, and a paragraph of encouragement.
+3. **Run the session.** Five questions get generated, mixing behavioral,
+   role-specific, and technical, with specific references to your CV and
+   the JD.
+
+**Path B — pick from the bank:**
+
+1. **Choose "Pick from the bank"** in the Question source picker.
+2. **Filter by stage** (recruiter screen, hiring manager, product sense,
+   execution + metrics, technical / DASME, stakeholder / GTM, behavioral /
+   values) and check 1-10 questions.
+3. **(Optional) add CV + JD** for personalized grading. The grader uses
+   them to cross-reference your answer against the role; without them,
+   it falls back to generic AI PM expectations.
+
+**Then either way:**
+
+4. For each question: the coach speaks it, you click record, you answer
+   out loud, you click stop, and you see your grade (score, strengths,
+   improvements, stronger rephrase). Click *Next question* to continue.
+5. **Read the summary** at the end: overall score, the top three things
+   to change, and a paragraph of encouragement.
 
 A full 5-question session costs roughly $0.05–0.15 in Claude tokens
-thanks to prompt caching on the CV + JD context. ElevenLabs voice on the
-free tier covers about 80 questions per month.
+thanks to prompt caching on the CV + JD context. Pick mode skips the
+question-generation call entirely. ElevenLabs free tier covers about
+80 questions per month.
 
 ## Quick start
 
@@ -66,8 +90,13 @@ stories — the grader uses them to personalize feedback.
 - DASME, the 4-layer AI system-design framework, plus 7 anti-patterns
 - The model-selection table (LLM vs ML vs rules)
 - The SIGNAL metric cascade (model → UX → business)
-- 64 system-design questions + 8 product-sense bonuses, filterable, with
-  a 45-minute drill timer that surfaces the DASME phase you should be on
+- **114 questions across the 7 stages**, filterable by stage or by
+  system-design sub-category: 6 recruiter screen, 8 hiring manager, 8
+  product-sense cases, 8 execution + metrics, 64 technical / DASME
+  system design, 8 stakeholder / GTM, 12 behavioral / values. Each
+  question has a drill timer matched to its stage (45 min with DASME
+  phase markers for technical, 12 min for product sense, 4 min for the
+  spoken stages).
 - Company playbooks for OpenAI, Anthropic, Google DeepMind, Meta AI,
   Amazon AGI, Netflix, Apple, Nvidia (Anthropic includes signature
   interview questions, what to mention unprompted, what to avoid, and
