@@ -90,12 +90,21 @@ function splitMessages(messages: Message[], cacheSystem?: boolean[]) {
   return { system, messages: nonSystem };
 }
 
+// Claude Opus 4.7 deprecated the `temperature` parameter; passing it
+// returns a 400. We keep `temperature` on ChatOptions for forward
+// compatibility but only forward it when targeting a non-Opus-4.7 model
+// (Sonnet 4.6, Haiku 4.5, older Opus).
+function supportsTemperature(model: string): boolean {
+  return !model.startsWith("claude-opus-4-7");
+}
+
 export async function chatCompletion(opts: ChatOptions): Promise<string> {
   const { system, messages } = splitMessages(opts.messages, opts.cacheSystem);
+  const model = opts.model || MODEL;
   const response = await getClient().messages.create({
-    model: opts.model || MODEL,
+    model,
     max_tokens: opts.max_tokens || 2000,
-    temperature: opts.temperature ?? 0.7,
+    ...(supportsTemperature(model) ? { temperature: opts.temperature ?? 0.7 } : {}),
     system,
     messages,
   });
@@ -110,10 +119,11 @@ export async function* chatCompletionStream(
   opts: ChatOptions,
 ): AsyncGenerator<string> {
   const { system, messages } = splitMessages(opts.messages, opts.cacheSystem);
+  const model = opts.model || MODEL;
   const stream = getClient().messages.stream({
-    model: opts.model || MODEL,
+    model,
     max_tokens: opts.max_tokens || 2500,
-    temperature: opts.temperature ?? 0.3,
+    ...(supportsTemperature(model) ? { temperature: opts.temperature ?? 0.3 } : {}),
     system,
     messages,
   });

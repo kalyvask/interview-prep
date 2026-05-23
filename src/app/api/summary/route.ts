@@ -61,8 +61,17 @@ export async function POST(request: Request) {
       temperature: MODEL_CONFIG.summary.temperature,
     });
 
-    const summary = extractJSON(text) as SummaryResult;
-    return NextResponse.json(summary);
+    try {
+      const summary = extractJSON(text) as SummaryResult;
+      return NextResponse.json(summary);
+    } catch (parseErr) {
+      console.error("summary parse error:", parseErr);
+      console.error("summary raw text (first 3000 chars):", text.slice(0, 3000));
+      return NextResponse.json(
+        { error: "Summary model returned malformed JSON", rawSample: text.slice(0, 500) },
+        { status: 502 },
+      );
+    }
   } catch (error) {
     console.error("summary error:", error);
     return NextResponse.json({ error: "Failed to summarize session" }, { status: 502 });
