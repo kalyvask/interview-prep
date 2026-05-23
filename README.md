@@ -1,9 +1,12 @@
 # interview-prep
 
-A reference + drill surface for AI PM interviews. Built around the
-`ai-pm-interview-coach` skill (Aakash Gupta's rubric, calibrated against
-200+ candidates and 30+ AI PM offers at OpenAI, Anthropic, Google
-DeepMind, Meta AI, and Amazon AGI).
+A reference and drill surface for AI PM interviews. Static reference content
+(seven rounds, the DASME framework, a 64-question system-design bank, paired
+calibration answers, and per-company playbooks) plus an interactive mock
+interview at `/interview` that turns your CV + a job description into five
+personalized questions, plays them aloud, transcribes your voice answer,
+and grades it against the same paired calibration examples used in the
+reference.
 
 ## What's in here
 

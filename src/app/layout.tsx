@@ -24,14 +24,14 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "AI PM Interview Prep — calibrated against 200+ candidates",
+  title: "AI PM Interview Prep",
   description:
-    "The 7 AI PM interview rounds, the DASME framework, the 64-question bank, calibration answers, and company playbooks. Built on Aakash Gupta's coaching rubric.",
+    "Reference and drill surface for AI PM interviews. 7 rounds, the DASME framework, a 64-question system-design bank, paired calibration answers, company playbooks, and a personalized mock interview at /interview that runs CV + JD through Claude with prompt caching.",
   metadataBase: new URL("https://interview-prep.vercel.app"),
   openGraph: {
     title: "AI PM Interview Prep",
     description:
-      "DASME, the 64-question bank, calibration answers, and the company playbooks for OpenAI, Anthropic, Google DeepMind, Meta AI, and Amazon AGI.",
+      "DASME, the 64-question bank, calibration answers, company playbooks, and a personalized mock interview that grades you against real paired examples.",
   },
 };
 

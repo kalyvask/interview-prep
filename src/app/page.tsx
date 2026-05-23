@@ -13,9 +13,10 @@ export default function HomePage() {
         </h1>
 
         <p className="mt-8 max-w-[58ch] text-lg md:text-xl text-[color:var(--color-ink-2)] leading-[1.55]">
-          Aakash Gupta&rsquo;s rubric &mdash; calibrated against 200+ candidates and 30+ AI PM offers
-          &mdash; turned into a living reference. Seven rounds, the DASME framework, sixty-four
-          system-design questions, and the calibration answers that separate a&nbsp;4 from a&nbsp;9.
+          Seven rounds, the DASME framework, sixty-four system-design questions,
+          paired calibration answers that separate a&nbsp;4 from a&nbsp;9, and a
+          personalized mock interview that grades your voice answers against
+          those same paired examples.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center gap-3">

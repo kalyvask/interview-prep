@@ -6,9 +6,64 @@
  * Per-question prompts (the question text, the candidate's answer) sit in
  * the user message and are NOT cached. Cache hit rate across a session:
  * 5+ of 6 calls (start + 5 grades + summary).
+ *
+ * The grader and question generator are anchored against real interview
+ * material — paired 4/10-vs-9/10 calibration answers from
+ * src/content/calibrations.ts and real system-design / product-sense
+ * questions from src/content/questions.ts. Updating those files updates
+ * the prompts automatically.
  */
 
 import { buildProfileContext } from "./user-profile";
+import { CALIBRATIONS } from "@/content/calibrations";
+import { QUESTIONS } from "@/content/questions";
+
+/* ─── Calibration anchors (real coach-rated paired answers) ──────── */
+
+function buildCalibrationAnchors(): string {
+  // Pull the behavioral + system-design pair: covers the two most common
+  // rounds and gives the grader concrete 3-4/10 vs 9/10 endpoints.
+  const picks = CALIBRATIONS.filter(
+    (c) => c.id === "tell-me-about-yourself" || c.id === "system-design-churn",
+  );
+  if (picks.length === 0) return "";
+  const blocks = picks.map((c) => {
+    const flaws = c.weak.flaws.map((f) => `   - ${f}`).join("\n");
+    const strengths = c.strong.strengths.map((s) => `   - ${s}`).join("\n");
+    return `Question: "${c.question}"
+
+WEAK (${c.weak.score}):
+"""
+${c.weak.response}
+"""
+Why it scored ${c.weak.score}:
+${flaws}
+
+STRONG (${c.strong.score}):
+"""
+${c.strong.response}
+"""
+Why it scored ${c.strong.score}:
+${strengths}`;
+  });
+  return blocks.join("\n\n———\n\n");
+}
+
+/* ─── Question shape examples (real interviewer questions) ───────── */
+
+function buildQuestionShapeExamples(): string {
+  // One representative question per category from the bank — keeps the
+  // generator grounded in the shape real interviewers use (specific,
+  // decision-forcing, named domain), not soft hypotheticals.
+  const seen = new Set<string>();
+  const picks: { category: string; text: string }[] = [];
+  for (const q of QUESTIONS) {
+    if (seen.has(q.category)) continue;
+    seen.add(q.category);
+    picks.push({ category: q.category, text: q.text });
+  }
+  return picks.map((p) => `  - [${p.category}] ${p.text}`).join("\n");
+}
 
 export interface SessionContextInput {
   cvText: string;
@@ -45,7 +100,13 @@ Generate exactly 5 personalized interview questions for the candidate, mixing ca
   - 2 role-specific (drawn from the JD's stated requirements)
   - 1 technical or product-sense (relevant to the role's domain)
 
-Each question should be one a real interviewer at the target company would actually ask. Reference concrete things from the CV (specific projects, metrics, transitions) — generic questions are useless. No softball questions.
+QUESTION SHAPE — your generated questions must match the shape of real interviewer questions. Examples of questions real AI PMs were asked at top-tier loops (from the system-design question bank, one per category):
+
+${buildQuestionShapeExamples()}
+
+Notice the shape: specific named domain (financial-services, ChatGPT memory, 500M daily posts, 10x scale), decision-forcing prompts ("design", "architect", "build", "diagnose"), not soft hypotheticals. Your generated questions should feel like they were asked by an actual interviewer who read the CV and JD beforehand.
+
+Reference concrete things from the CV (specific projects, metrics, transitions) — generic questions are useless. No softball questions.
 
 Return ONLY valid JSON:
 {
@@ -71,10 +132,16 @@ export function startInterviewUser(): string {
 export function gradeSystem(): string {
   return `You are a senior interview coach grading a candidate's answer in a Product Management mock interview.
 
+CALIBRATION ANCHORS — real coach-rated answers. Use these to anchor your scoring; do not invent your own scale.
+
+${buildCalibrationAnchors()}
+
+Notice the gap between the weak and strong answers: specificity, named architectures / metrics / dollar math, weakness-flipping, third-option thinking, time discipline. That's the gap between a 4 and a 9. Most real answers fall somewhere between — be honest about where this one lands.
+
 GRADING RULES:
-- Score 1-10 honestly. 5-6 is the median answer; 7 is solid; 8+ requires both substance and structure; 9-10 is rare and requires a specific, memorable insight tied to the role.
+- Score 1-10 calibrated against the anchors above. 5-6 is the median answer; 7 is solid but missing one element a 9 would have; 8 is very strong; 9-10 is rare and requires the kind of specificity, third-option thinking, and weakness-flipping visible in the STRONG anchors.
 - "Stronger rephrase" rewrites the candidate's OWN answer in 4-6 sentences. Keep their story and content; tighten structure, add what's missing, cut what isn't earning its place. Do NOT swap in someone else's story.
-- "Strengths" and "improvements" are 2-4 items each. Specific, not generic ("the metric you cited is concrete" beats "good use of metrics").
+- "Strengths" and "improvements" are 2-4 items each. Specific, not generic ("the metric you cited is concrete" beats "good use of metrics"). When relevant, reference how the answer compares to the anchors (e.g., "named the architecture like the STRONG anchor, but missed the dollar math").
 
 Return ONLY valid JSON:
 {
