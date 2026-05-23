@@ -1,47 +1,79 @@
 # interview-prep
 
-A reference and drill surface for AI PM interviews. Static reference content
-(seven rounds, the DASME framework, a 64-question system-design bank, paired
-calibration answers, and per-company playbooks) plus an interactive mock
-interview at `/interview` that turns your CV + a job description into five
-personalized questions, plays them aloud, transcribes your voice answer,
-and grades it against the same paired calibration examples used in the
-reference.
+Practice AI PM interviews end to end. Add your resume, paste the job
+description, and the tool generates five interview questions tailored to
+your background and that role. The coach speaks each question aloud
+through ElevenLabs; you answer out loud; Whisper transcribes you; Claude
+grades each answer 1-10 against real coach-rated calibration examples,
+names strengths and improvements, and rewrites your answer as a stronger
+version. After five questions you see an overall score, the top three
+things to fix before the real loop, and a short note on what you did
+well.
 
-## What's in here
+Questions and grading by Claude (Opus 4.7). Voice by ElevenLabs (or the
+browser's built-in voice as a fallback). Transcription by Whisper (or
+typing as a fallback). Resume parsed in the browser; never leaves your
+machine.
 
-**Static reference** (no API key required):
+The tool is also a browseable reference: seven AI PM interview rounds,
+the DASME framework, sixty-four system-design questions with a
+45-minute drill timer, paired 4/10-vs-9/10 calibration answers, and
+company playbooks for OpenAI, Anthropic, Google DeepMind, Meta AI,
+Amazon AGI, Netflix, Apple, and Nvidia.
+
+## How to use it
+
+1. **Add your resume.** Drag a PDF into `/interview` or click "Paste as
+   text" and paste it. Parsing happens in the browser.
+2. **Paste the JD** for the role you're prepping for.
+3. **Run the session.** Click *Start the interview*. Five personalized
+   questions get generated. For each one: the coach speaks the question,
+   you click record, you answer out loud, you click stop, and you see
+   your grade (score, strengths, improvements, stronger rephrase). Click
+   *Next question* to continue.
+4. **Read the summary** after question five: overall score, the top
+   three things to change, and a paragraph of encouragement.
+
+A full 5-question session costs roughly $0.05–0.15 in Claude tokens
+thanks to prompt caching on the CV + JD context. ElevenLabs voice on the
+free tier covers about 80 questions per month.
+
+## Quick start
+
+```bash
+git clone https://github.com/kalyvask/interview-prep.git
+cd interview-prep
+npm install
+cp .env.example .env.local
+# edit .env.local — only ANTHROPIC_API_KEY is required; ELEVENLABS_API_KEY
+# and OPENAI_API_KEY are optional and degrade gracefully when missing
+npm run dev
+```
+
+Open <http://localhost:3000/interview> in Chrome or Edge. Allow microphone
+access when prompted. Safari has limited Web Speech support.
+
+The first run of `npm run dev` or `npm run build` copies
+`src/content/personal.example.ts` to `src/content/personal.ts`
+(gitignored). Edit `personal.ts` to add your own profile and anchor
+stories — the grader uses them to personalize feedback.
+
+## What's in the static reference
+
+(no API key required; browseable at any time)
 
 - The 7 interview rounds + 8 behavioral dimensions + 3 Laws
-- DASME — the 4-layer AI system-design framework — plus 7 anti-patterns
+- DASME, the 4-layer AI system-design framework, plus 7 anti-patterns
 - The model-selection table (LLM vs ML vs rules)
 - The SIGNAL metric cascade (model → UX → business)
 - 64 system-design questions + 8 product-sense bonuses, filterable, with
   a 45-minute drill timer that surfaces the DASME phase you should be on
 - Company playbooks for OpenAI, Anthropic, Google DeepMind, Meta AI,
-  Amazon AGI, Netflix, Apple, Nvidia
-- Four paired calibration answers — 4/10 next to 9/10
-
-**Mock interview** (`/interview`, requires `ANTHROPIC_API_KEY`):
-
-- Upload a CV (PDF, parsed in the browser) and paste a JD
-- Claude generates 5 personalized questions mixing behavioral, technical,
-  and role-specific — referencing things from the actual CV and JD
-- The coach speaks each question aloud (ElevenLabs if configured,
-  otherwise the browser's built-in voice)
-- Speak your answer; the recording is transcribed (Whisper if configured,
-  otherwise type) and pacing-scored (WPM, fillers, target window)
-- Each answer is graded 1-10 with strengths, improvements, and a stronger
-  rephrase of your own words
-- A summary screen shows the overall score, the top three tweaks for the
-  real interview, and short genuine encouragement
-- Session state lives in `sessionStorage`; a refresh doesn't discard
-  an in-progress interview
-
-The CV + JD context is sent to Claude with `cache_control: ephemeral`,
-so the second-through-sixth API calls in a session read from cache at
-~10% of the cost. A full 5-question session lands at roughly
-$0.05–0.15 in Claude tokens.
+  Amazon AGI, Netflix, Apple, Nvidia (Anthropic includes signature
+  interview questions, what to mention unprompted, what to avoid, and
+  the traits they hire for)
+- Four paired calibration answers — 4/10 next to 9/10 — that double as
+  the scoring anchors the mock-interview grader uses
 
 ## Stack
 
@@ -53,25 +85,6 @@ $0.05–0.15 in Claude tokens.
 - `pdfjs-dist` for in-browser CV parsing (worker loaded from CDN)
 - ElevenLabs (optional) for TTS; browser `SpeechSynthesis` fallback
 - OpenAI Whisper (optional) for STT; typing fallback
-
-## Setup
-
-```bash
-git clone https://github.com/kalyvask4/interview-prep.git
-cd interview-prep
-npm install
-cp .env.example .env.local
-# edit .env.local with your keys
-npm run dev
-```
-
-The first run of `npm run dev` or `npm run build` copies
-`src/content/personal.example.ts` to `src/content/personal.ts`
-(gitignored). Edit `personal.ts` to add your own profile and anchor
-stories; the mock interview routes use it to personalize the prompts.
-
-Open <http://localhost:3000> in Chrome or Edge (Safari has limited voice
-support). Allow microphone access when prompted.
 
 ## Environment variables
 
