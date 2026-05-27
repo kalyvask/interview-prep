@@ -42,5 +42,8 @@ export async function GET() {
     elevenlabsAvailable: Boolean(process.env.ELEVENLABS_API_KEY),
     whisperAvailable: Boolean(process.env.OPENAI_API_KEY),
     anthropicConfigured: Boolean(process.env.ANTHROPIC_API_KEY),
+    liveavatarAvailable: Boolean(
+      process.env.LIVEAVATAR_API_KEY && process.env.LIVEAVATAR_AVATAR_ID,
+    ),
   });
 }

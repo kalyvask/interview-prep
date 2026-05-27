@@ -76,4 +76,5 @@ export interface ClientConfig {
   elevenlabsAvailable: boolean;
   whisperAvailable: boolean;
   anthropicConfigured: boolean;
+  liveavatarAvailable?: boolean;
 }

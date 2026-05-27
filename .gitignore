@@ -37,6 +37,11 @@ yarn-error.log*
 # personal-config layer — your stories, profile, calibration anchors
 src/content/personal.ts
 
+# private practice pages and per-company question scripts (Next.js
+# (personal) route group is gitignored by convention)
+src/app/(personal)/
+src/content/*-personal.ts
+
 # vercel
 .vercel
 

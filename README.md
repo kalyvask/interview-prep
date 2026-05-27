@@ -14,6 +14,13 @@ your answer as a stronger version. At the end you get an overall score,
 the top three things to fix before the real loop, and a short
 encouragement.
 
+Optionally, drop in a **photoreal interviewer face** for any practice
+page: an `<InterviewerFace />` (animated SVG, no API key) and a
+`<LiveAvatar />` (HeyGen WebRTC stream, lip-syncs the spoken question)
+both live under `@/components/avatar/`. The LiveAvatar component
+auto-falls back when credits run out. See the HeyGen LiveAvatar section
+below.
+
 Questions and grading by Claude (Opus 4.7). Voice by ElevenLabs (or the
 browser's built-in voice as a fallback). Transcription by Whisper (or
 typing as a fallback). Resume parsed in the browser; never leaves your
@@ -114,6 +121,8 @@ stories — the grader uses them to personalize feedback.
 - `pdfjs-dist` for in-browser CV parsing (worker loaded from CDN)
 - ElevenLabs (optional) for TTS; browser `SpeechSynthesis` fallback
 - OpenAI Whisper (optional) for STT; typing fallback
+- `@heygen/liveavatar-web-sdk` (optional) for the photoreal interviewer
+  component (`<LiveAvatar />`); SVG face fallback
 
 ## Environment variables
 
@@ -126,6 +135,10 @@ gracefully when missing.
 | `ELEVENLABS_API_KEY`     | no       | Natural-voice TTS; browser `SpeechSynthesis` is the fallback  |
 | `ELEVENLABS_VOICE_ID`    | no       | Defaults to `EXAVITQu4vr4xnSDxMAi` (Sarah); see table below   |
 | `OPENAI_API_KEY`         | no       | Whisper transcription of voice answers; text input is the fallback |
+| `LIVEAVATAR_API_KEY`     | no       | HeyGen LiveAvatar photoreal `<LiveAvatar />` component; SVG face fallback |
+| `LIVEAVATAR_AVATAR_ID`   | no       | Avatar UUID from the LiveAvatar dashboard                     |
+| `LIVEAVATAR_QUALITY`     | no       | `very_high` \| `high` (default) \| `medium` \| `low`          |
+| `LIVEAVATAR_SANDBOX`     | no       | `true` (default) for free rate-limited sessions; `false` for paid |
 
 ### ElevenLabs voice IDs
 
@@ -138,6 +151,50 @@ gracefully when missing.
 | Charlie | `IKne3meq5aSn9XLyUdCD`   | Younger male, energetic          |
 
 Browse the full library at <https://elevenlabs.io/voice-library>.
+
+## HeyGen LiveAvatar (photoreal interviewer, optional)
+
+Two interviewer-face components live under `@/components/avatar/` —
+drop either into any practice page:
+
+- `<InterviewerFace state={...} />` — animated SVG (no API key). Idle
+  blinks + saccades, nods / brow raises / smiles while listening,
+  mouth animates while speaking. Push `{ speaking, listening, nodTick }`
+  state in to drive it; bump `nodTick` to trigger a nod on demand
+  (useful for mic-volume → nod).
+- `<LiveAvatar ref onStateChange onError />` — HeyGen LiveAvatar
+  streamed over WebRTC. Lip-syncs whatever you `await ref.speak(text)`
+  with. Auto-falls back to the SVG when LiveAvatar returns a quota /
+  billing / concurrent-limit error (surfaces `{ quotaExhausted: true }`
+  through `onError`).
+
+**Heads up:** existing HeyGen API keys do **not** work. LiveAvatar is
+HeyGen's rebrand of the Interactive Avatar product with a separate auth
+system.
+
+Setup:
+
+1. Sign up at <https://app.liveavatar.com>
+2. Mint an API key at `app.liveavatar.com/developers`
+3. Pick an avatar from the avatars library and copy its UUID
+4. Paste both into `.env.local`:
+   ```
+   LIVEAVATAR_API_KEY=<your-key>
+   LIVEAVATAR_AVATAR_ID=<avatar-uuid>
+   LIVEAVATAR_SANDBOX=true   # keep true while testing — no quota burn
+   ```
+5. Restart the dev server (env vars are cached at startup)
+6. `config.liveavatarAvailable` (from `/api/config`) flips to `true`
+   and `<LiveAvatar />` can mount
+
+The avatar uses its own voice (skip ElevenLabs when active). The token
+endpoint is `POST /api/liveavatar-token`; returns `503` if env vars are
+missing and `402` with `{ quotaExhausted: true }` when LiveAvatar
+reports a billing / concurrent error.
+
+**Cost note:** sandbox mode is free and rate-limited; real sessions
+burn ~$0.30–$1/min depending on quality. Top up at
+`app.liveavatar.com` to re-enable after a quota exhaustion.
 
 ## Personal config layer
 
@@ -181,6 +238,7 @@ API:
 /api/summary            POST  Session-end summary (cached CV+JD)
 /api/tts                POST  ElevenLabs proxy; 503 if no key
 /api/transcribe         POST  Whisper proxy; 503 if no key
+/api/liveavatar-token   POST  HeyGen LiveAvatar session-token mint; 503 if no key, 402 if quota exhausted
 /api/config             GET   Capability flags (booleans, no secrets)
 
 (round-mode API, used by the consistency-checking loop)
@@ -201,10 +259,11 @@ src/
 │   ├── frameworks/              # DASME, SIGNAL, models, anti-patterns
 │   ├── companies/               # Company playbooks
 │   ├── calibrations/            # Paired 4/10 vs 9/10
-│   └── api/                     # Grading + voice routes
+│   └── api/                     # Grading + voice + liveavatar-token routes
 ├── components/
 │   ├── site-nav.tsx
 │   ├── site-footer.tsx
+│   ├── avatar/                  # Drop-in interviewer faces: SVG + HeyGen LiveAvatar
 │   ├── session/                 # Mock interview UI (setup, audio, recorder, grade)
 │   ├── interview/               # Round-mode UI (ported from interview-simulator)
 │   └── shared/
