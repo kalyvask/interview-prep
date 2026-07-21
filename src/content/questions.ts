@@ -126,6 +126,21 @@ export const CATEGORY_NOTES: CategoryNote[] = [
       "If you reach for an LLM on a tabular prediction task, you've failed. XGBoost, random forest, time series — cheaper, faster, more interpretable, ~100x less cost per prediction. Run the metric cascade with dollar math.",
   },
   {
+    category: "AI Literacy",
+    passLine:
+      "Crisp definition first, then the PM 'so what' — the product decision the concept drives. One-minute exec explanation, then the tradeoff. Name the failure mode. Never hand-wave 'AI magic': say which layer (retrieval, generation, orchestration, guardrail) and why.",
+  },
+  {
+    category: "Cost + Unit Economics",
+    passLine:
+      "Do the dollar math out loud: tokens in/out × price, cache hit rate, calls per task. Separate p50 from p99 latency, and time-to-first-token from total. Tie every lever back to gross margin at scale.",
+  },
+  {
+    category: "AI Strategy",
+    passLine:
+      "Assume the base model is a commodity every competitor can call. The moat lives in the data flywheel, workflow depth, distribution, and switching cost — not the weights. Name the platform risk and the narrow wedge.",
+  },
+  {
     category: "Product Sense Cases",
     passLine:
       "Not a system-design round — but the model-layer / app-layer distinction still earns points. Mention safety. Use real numbers. Pick a segment.",
@@ -158,7 +173,7 @@ export const CATEGORY_NOTES: CategoryNote[] = [
 ];
 
 /**
- * Public bank — 114 questions visible in any fork. Used in /questions,
+ * Public bank — 140 questions visible in any fork. Used in /questions,
  * the picker form, AND in the prompt-time shape examples in
  * session-prompts.ts (so personal extras stay out of model prompts).
  */
@@ -300,10 +315,42 @@ export const PUBLIC_QUESTIONS: Question[] = [
   { number: 112, text: "Tell me about a time you said no to a powerful stakeholder.",                                                                 category: "Behavioral / values", stage: "behavioral_values" },
   { number: 113, text: "Tell me about a time the safety or mission framing of this company would have changed a decision you made.",                  category: "Behavioral / values", stage: "behavioral_values" },
   { number: 114, text: "Tell me about a time you held a metric you were measured on as the wrong one — and what you did about it.",                  category: "Behavioral / values", stage: "behavioral_values" },
+
+  // AI Literacy (115–128) — Technical / DASME (conceptual, engineer in the room)
+  { number: 115, text: "When would you use RAG instead of fine-tuning to give a model new knowledge — and when do you combine them?",              category: "AI Literacy", stage: "technical_dasme" },
+  { number: 116, text: "Explain RAG, embeddings, and re-ranking to a non-technical executive — each in under a minute.",                          category: "AI Literacy", stage: "technical_dasme" },
+  { number: 117, text: "A RAG system is giving wrong answers. How do you diagnose retrieval failure versus generation failure?",                 category: "AI Literacy", stage: "technical_dasme" },
+  { number: 118, text: "What makes something an agent rather than a single LLM call, and when do you actually need one?",                          category: "AI Literacy", stage: "technical_dasme" },
+  { number: 119, text: "What is the Model Context Protocol (MCP), and why should a PM care?",                                                      category: "AI Literacy", stage: "technical_dasme" },
+  { number: 120, text: "Long context windows keep growing. Has long context killed RAG?",                                                        category: "AI Literacy", stage: "technical_dasme" },
+  { number: 121, text: "Single agent versus multi-agent: when is the added complexity of multiple agents worth it?",                            category: "AI Literacy", stage: "technical_dasme" },
+  { number: 122, text: "What is context engineering, and why can it matter more than prompt wording?",                                          category: "AI Literacy", stage: "technical_dasme" },
+  { number: 123, text: "What is a guardrail or classifier model, and how does it differ from the main model?",                                  category: "AI Literacy", stage: "technical_dasme" },
+  { number: 124, text: "Walk me through an eval harness for an AI feature — what is offline, what is online, and why you need both.",             category: "AI Literacy", stage: "technical_dasme" },
+  { number: 125, text: "Define hallucination. How would you measure the rate, and what rate would you refuse to launch above?",                 category: "AI Literacy", stage: "technical_dasme" },
+  { number: 126, text: "What is LLM-as-judge, and what are its failure modes?",                                                                 category: "AI Literacy", stage: "technical_dasme" },
+  { number: 127, text: "What is pass^k, and why does reliability matter more than average accuracy for agents?",                               category: "AI Literacy", stage: "technical_dasme" },
+  { number: 128, text: "What is prompt injection, why does it matter more for agents than chatbots, and how does it differ from a jailbreak?", category: "AI Literacy", stage: "technical_dasme" },
+
+  // Cost + Unit Economics (129–134) — Technical / DASME
+  { number: 129, text: "Walk me through the unit economics of an LLM feature.",                                                                 category: "Cost + Unit Economics", stage: "technical_dasme" },
+  { number: 130, text: "What is prompt caching, and how much does it change unit economics?",                                                   category: "Cost + Unit Economics", stage: "technical_dasme" },
+  { number: 131, text: "Time to first token versus total latency: which do you optimize, and when?",                                            category: "Cost + Unit Economics", stage: "technical_dasme" },
+  { number: 132, text: "How do you control cost and latency in an agent without wrecking quality?",                                             category: "Cost + Unit Economics", stage: "technical_dasme" },
+  { number: 133, text: "How do you protect gross margin on an AI product as usage scales?",                                                     category: "Cost + Unit Economics", stage: "technical_dasme" },
+  { number: 134, text: "Inference costs keep falling fast. How should that shape strategy and pricing?",                                        category: "Cost + Unit Economics", stage: "technical_dasme" },
+
+  // AI Strategy (135–140) — Stakeholder / GTM
+  { number: 135, text: "Build versus buy for a core AI capability: how do you decide?",                                                         category: "AI Strategy", stage: "stakeholder_gtm" },
+  { number: 136, text: "What is a durable moat for an AI product when everyone can call the same models?",                                      category: "AI Strategy", stage: "stakeholder_gtm" },
+  { number: 137, text: "The model provider could ship your feature as a native capability. How do you survive platform risk?",                  category: "AI Strategy", stage: "stakeholder_gtm" },
+  { number: 138, text: "How do you build an AI product roadmap when the underlying models change every few months?",                            category: "AI Strategy", stage: "stakeholder_gtm" },
+  { number: 139, text: "How do you build and defend a data flywheel for an AI product?",                                                        category: "AI Strategy", stage: "stakeholder_gtm" },
+  { number: 140, text: "How would you price an AI feature given variable inference costs?",                                                      category: "AI Strategy", stage: "stakeholder_gtm" },
 ];
 
 /**
- * Merged bank — public 114 + any extras the user defined in
+ * Merged bank — public 140 + any extras the user defined in
  * src/content/personal.ts EXTRA_QUESTIONS. Categories are loosened
  * because extras can introduce new ones. This is the array consumed
  * by the picker form and the /questions explorer.
@@ -320,6 +367,9 @@ export const CATEGORY_ORDER: QuestionCategory[] = [
   "Evaluation + Safety",
   "Autonomous Agents + Workflows",
   "Prediction + Analytics",
+  "AI Literacy",
+  "Cost + Unit Economics",
+  "AI Strategy",
   "Product Sense Cases",
   "Recruiter screen",
   "Hiring manager",

@@ -11,7 +11,7 @@ import { QuestionsExplorer } from "./questions-explorer";
 export const metadata = {
   title: "Question Bank — AI PM Interview Prep",
   description:
-    "114 AI PM interview questions across the seven loop stages — recruiter screen, hiring manager, product sense, execution and metrics, technical / DASME system design, stakeholder / GTM, and behavioral / values. Filterable by stage or by system-design category. 45-minute drill timer for technical questions.",
+    "140 AI PM interview questions across the seven loop stages — recruiter screen, hiring manager, product sense, execution and metrics, technical / DASME system design, stakeholder / GTM, and behavioral / values. Filterable by stage or by system-design category. 45-minute drill timer for technical questions.",
 };
 
 export default function QuestionsPage() {

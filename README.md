@@ -3,7 +3,7 @@
 Practice AI PM interviews end to end. At `/interview`, choose your
 source: either upload your CV and paste a JD to get five questions
 generated for you, or pick up to ten questions directly from the
-114-question bank — filtered by interview stage (recruiter screen,
+140-question bank — filtered by interview stage (recruiter screen,
 hiring manager, product sense, execution + metrics, technical / DASME,
 stakeholder / GTM, behavioral / values). Either path runs the same
 voice loop: the coach speaks each question aloud through ElevenLabs;
@@ -27,7 +27,7 @@ typing as a fallback). Resume parsed in the browser; never leaves your
 machine.
 
 The tool is also a browseable reference at `/questions`,
-`/frameworks`, `/companies`, and `/calibrations`: 114 questions across
+`/frameworks`, `/companies`, and `/calibrations`: 140 questions across
 all seven AI PM interview stages, the DASME framework, paired
 4/10-vs-9/10 calibration answers, and per-company playbooks for OpenAI,
 Anthropic, Google DeepMind, Meta AI, Amazon AGI, Netflix, Apple, and
@@ -97,10 +97,13 @@ stories — the grader uses them to personalize feedback.
 - DASME, the 4-layer AI system-design framework, plus 7 anti-patterns
 - The model-selection table (LLM vs ML vs rules)
 - The SIGNAL metric cascade (model → UX → business)
-- **114 questions across the 7 stages**, filterable by stage or by
-  system-design sub-category: 6 recruiter screen, 8 hiring manager, 8
-  product-sense cases, 8 execution + metrics, 64 technical / DASME
-  system design, 8 stakeholder / GTM, 12 behavioral / values. Each
+- **140 questions across the 7 stages**, filterable by stage or by
+  sub-category: 6 recruiter screen, 8 hiring manager, 8
+  product-sense cases, 8 execution + metrics, 84 technical / DASME (64
+  system-design cases plus 14 AI-literacy and 6 cost / unit-economics
+  short-answer questions for the engineer-in-the-room round), 14
+  stakeholder / GTM (8 situational plus 6 AI-strategy), 12 behavioral /
+  values. Each
   question has a drill timer matched to its stage (45 min with DASME
   phase markers for technical, 12 min for product sense, 4 min for the
   spoken stages).

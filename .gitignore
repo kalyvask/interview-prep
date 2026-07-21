@@ -48,3 +48,6 @@ src/content/*-personal.ts
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local dev-server config
+/.claude

@@ -188,7 +188,7 @@ export default function SetupForm({
               {
                 value: "pick",
                 title: "Pick from the bank",
-                desc: `Choose up to ${MAX_PICKS} questions from the 114-question bank, filtered by interview stage. Add CV + JD for personalized grading (optional).`,
+                desc: `Choose up to ${MAX_PICKS} questions from the 140-question bank, filtered by interview stage. Add CV + JD for personalized grading (optional).`,
               },
             ] as { value: SourceMode; title: string; desc: string }[]
           ).map((opt) => {
